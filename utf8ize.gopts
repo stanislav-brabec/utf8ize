@@ -1,0 +1,336 @@
+@genopts
+
+@code_style line_up function_keyword casetab
+
+@program utf8ize
+
+@version 0.1
+
+@year 2004
+
+@author Stanislav Brabec
+
+@bugsto Stanislav Brabec <sbrabec@suse.cz>
+
+@free_copy
+
+@usage [OPTION]... [DIRECTORY]...
+
+@short
+Renames files from legacy locale dependent charset names to UTF-8.
+If no directory is specified, checks current directory.
+
+@option CHARSET -c --charset=CHARSET
+use specific charset
+
+@switch REAL -r --real
+real mode, perform rename
+
+@switch DRY_RUN --dry-run
+do nothing, only check directories (default)
+
+@end
+
+unset charsets
+function legacy_charset {
+    eval 'CHARSET_'$1'[${#CHARSET_'$1'[@]}]='$2
+}
+
+legacy_charset C ASCII
+legacy_charset aa_DJ ISO-8859-1
+legacy_charset af_ZA ISO-8859-1
+legacy_charset an_ES ISO-8859-15
+legacy_charset ar_AE ISO-8859-6
+legacy_charset ar_BH ISO-8859-6
+legacy_charset ar_DZ ISO-8859-6
+legacy_charset ar_EG ISO-8859-6
+legacy_charset ar_IQ ISO-8859-6
+legacy_charset ar_JO ISO-8859-6
+legacy_charset ar_KW ISO-8859-6
+legacy_charset ar_LB ISO-8859-6
+legacy_charset ar_LY ISO-8859-6
+legacy_charset ar_MA ISO-8859-6
+legacy_charset ar_OM ISO-8859-6
+legacy_charset ar_QA ISO-8859-6
+legacy_charset ar_SA ISO-8859-6
+legacy_charset ar_SD ISO-8859-6
+legacy_charset ar_SY ISO-8859-6
+legacy_charset ar_TN ISO-8859-6
+legacy_charset ar_YE ISO-8859-6
+legacy_charset be_BY CP1251
+legacy_charset bg_BG CP1251
+legacy_charset br_FR ISO-8859-1
+legacy_charset br_FR ISO-8859-15
+legacy_charset bs_BA ISO-8859-2
+legacy_charset ca_ES ISO-8859-1
+legacy_charset ca_ES ISO-8859-15
+legacy_charset cs_CZ ISO-8859-2
+legacy_charset cy_GB ISO-8859-14
+legacy_charset da_DK ISO-8859-1
+legacy_charset de_AT ISO-8859-1
+legacy_charset de_AT ISO-8859-15
+legacy_charset de_BE ISO-8859-1
+legacy_charset de_BE ISO-8859-15
+legacy_charset de_DE ISO-8859-1
+legacy_charset de_DE ISO-8859-15
+legacy_charset de_CH ISO-8859-1
+legacy_charset de_LU ISO-8859-1
+legacy_charset de_LU ISO-8859-15
+legacy_charset el_GR ISO-8859-7
+legacy_charset en_AU ISO-8859-1
+legacy_charset en_BE ISO-8859-1
+legacy_charset en_BE ISO-8859-15
+legacy_charset en_BW ISO-8859-1
+legacy_charset en_CA ISO-8859-1
+legacy_charset en_DK ISO-8859-1
+legacy_charset en_GB ISO-8859-1
+legacy_charset en_GB ISO-8859-15
+legacy_charset en_HK ISO-8859-1
+legacy_charset en_IE ISO-8859-1
+legacy_charset en_IE ISO-8859-15
+legacy_charset en_NZ ISO-8859-1
+legacy_charset en_PH ISO-8859-1
+legacy_charset en_SG ISO-8859-1
+legacy_charset en_US ISO-8859-1
+legacy_charset en_US ISO-8859-15
+legacy_charset en_ZA ISO-8859-1
+legacy_charset en_ZW ISO-8859-1
+legacy_charset es_AR ISO-8859-1
+legacy_charset es_BO ISO-8859-1
+legacy_charset es_CL ISO-8859-1
+legacy_charset es_CO ISO-8859-1
+legacy_charset es_CR ISO-8859-1
+legacy_charset es_DO ISO-8859-1
+legacy_charset es_EC ISO-8859-1
+legacy_charset es_ES ISO-8859-1
+legacy_charset es_ES ISO-8859-15
+legacy_charset es_GT ISO-8859-1
+legacy_charset es_HN ISO-8859-1
+legacy_charset es_MX ISO-8859-1
+legacy_charset es_NI ISO-8859-1
+legacy_charset es_PA ISO-8859-1
+legacy_charset es_PE ISO-8859-1
+legacy_charset es_PR ISO-8859-1
+legacy_charset es_PY ISO-8859-1
+legacy_charset es_SV ISO-8859-1
+legacy_charset es_US ISO-8859-1
+legacy_charset es_UY ISO-8859-1
+legacy_charset es_VE ISO-8859-1
+legacy_charset et_EE ISO-8859-1
+legacy_charset eu_ES ISO-8859-1
+legacy_charset eu_ES ISO-8859-15
+legacy_charset fi_FI ISO-8859-1
+legacy_charset fi_FI ISO-8859-15
+legacy_charset fo_FO ISO-8859-1
+legacy_charset fr_BE ISO-8859-1
+legacy_charset fr_BE ISO-8859-15
+legacy_charset fr_CA ISO-8859-1
+legacy_charset fr_FR ISO-8859-1
+legacy_charset fr_FR ISO-8859-15
+legacy_charset fr_CH ISO-8859-1
+legacy_charset fr_LU ISO-8859-1
+legacy_charset fr_LU ISO-8859-15
+legacy_charset ga_IE ISO-8859-1
+legacy_charset ga_IE ISO-8859-15
+legacy_charset gd_GB ISO-8859-15
+legacy_charset gl_ES ISO-8859-1
+legacy_charset gl_ES ISO-8859-15
+legacy_charset gv_GB ISO-8859-1
+legacy_charset he_IL ISO-8859-8
+legacy_charset hr_HR ISO-8859-2
+legacy_charset hu_HU ISO-8859-2
+legacy_charset id_ID ISO-8859-1
+legacy_charset is_IS ISO-8859-1
+legacy_charset it_CH ISO-8859-1
+legacy_charset it_IT ISO-8859-1
+legacy_charset it_IT ISO-8859-15
+legacy_charset iw_IL ISO-8859-8
+legacy_charset ja_JP EUC-JP
+legacy_charset ja_JP SHIFT_JIS
+legacy_charset ka_GE GEORGIAN-PS
+legacy_charset kl_GL ISO-8859-1
+legacy_charset ko_KR EUC-KR
+legacy_charset kw_GB ISO-8859-1
+legacy_charset lg_UG ISO-8859-10
+legacy_charset lt_LT ISO-8859-13
+legacy_charset lv_LV ISO-8859-13
+legacy_charset mi_NZ ISO-8859-13
+legacy_charset mk_MK ISO-8859-5
+legacy_charset ms_MY ISO-8859-1
+legacy_charset mt_MT ISO-8859-3
+legacy_charset nb_NO ISO-8859-1
+legacy_charset nl_BE ISO-8859-1
+legacy_charset nl_BE ISO-8859-15
+legacy_charset nl_NL ISO-8859-1
+legacy_charset nl_NL ISO-8859-15
+legacy_charset nn_NO ISO-8859-1
+legacy_charset no_NO ISO-8859-1
+legacy_charset oc_FR ISO-8859-1
+legacy_charset om_KE ISO-8859-1
+legacy_charset pl_PL ISO-8859-2
+legacy_charset pt_BR ISO-8859-1
+legacy_charset pt_PT ISO-8859-1
+legacy_charset pt_PT ISO-8859-15
+legacy_charset ro_RO ISO-8859-2
+legacy_charset ru_RU ISO-8859-5
+legacy_charset ru_RU KOI8-R
+legacy_charset ru_UA KOI8-U
+legacy_charset sh_YU ISO-8859-2
+legacy_charset sk_SK ISO-8859-2
+legacy_charset sl_SI ISO-8859-2
+legacy_charset so_DJ ISO-8859-1
+legacy_charset so_KE ISO-8859-1
+legacy_charset so_SO ISO-8859-1
+legacy_charset sq_AL ISO-8859-1
+legacy_charset sr_YU ISO-8859-2
+legacy_charset sr_YU ISO-8859-5
+legacy_charset st_ZA ISO-8859-1
+legacy_charset sv_FI ISO-8859-1
+legacy_charset sv_FI ISO-8859-15
+legacy_charset sv_SE ISO-8859-1
+legacy_charset sv_SE ISO-8859-15
+legacy_charset tg_TJ KOI8-T
+legacy_charset th_TH TIS-620
+legacy_charset tl_PH ISO-8859-1
+legacy_charset tr_TR ISO-8859-9
+legacy_charset uk_UA KOI8-U
+legacy_charset uz_UZ ISO-8859-1
+legacy_charset vi_VN TCVN5712-1
+legacy_charset wa_BE ISO-8859-1
+legacy_charset wa_BE ISO-8859-15
+legacy_charset xh_ZA ISO-8859-1
+legacy_charset yi_US CP1255
+legacy_charset zh_CN GB2312
+legacy_charset zh_CN GBK
+legacy_charset zh_CN GB18030
+legacy_charset zh_HK BIG5-HKSCS
+legacy_charset zh_SG GB2312
+legacy_charset zh_SG GBK
+legacy_charset zh_TW BIG5
+legacy_charset zh_TW EUC-TW
+legacy_charset zu_ZA ISO-8859-1
+
+shopt -s nullglob
+shopt -s dotglob
+shopt -s extglob
+
+I18N=
+
+if $OPTARG_CHARSET ; then
+    LEGACY_CHARSET=$OPTVAL_CHARSET
+else
+    if test -z "$LC_ALL" ; then
+	if test -z "$LC_CHARSET" ; then
+	    if test -z "$LANG" ; then
+		echo >&2 "$0: Locale charset is not set."
+		echo >&2 "Set your locale or use --charset to specify legacy charset."
+		exit 1
+	    else
+		I18N="$LANG"
+	    fi
+	else
+	    I18N="$LC_CHARSET"
+	fi
+    else
+	echo >&2 "$0: Warning: Use of LC_ALL in system environment setup is deprecated"
+	echo >&2 "and can have unexpected side effects. Use LANG instead."
+	I18N="$LC_ALL"
+    fi
+
+    I18N=${I18N%%.*}
+    I18N=${I18N%%@*}
+
+    if test ! -z "${I18N/*([a-zA-Z_])/}" ; then
+	echo >&2 "$0: Your locale definition contains strange characters ($I18N). Please use --charset and specify charset."
+	exit 1
+    fi
+
+    eval 'CHARSET_COUNT=${#CHARSET_'$I18N'[@]}'
+    if test $CHARSET_COUNT -gt 1 ; then
+	echo >&2 "$0: Legacy charset for your locale is ambiguous. Please use --charset and specify exact one."
+	eval 'echo >&2 "Possible values: ${CHARSET_'$I18N'[*]}"'
+	exit 1
+    fi
+
+    if test $CHARSET_COUNT -eq 0 ; then
+	echo >&2 "$0: Legacy charset for your locale is not known. Please use --charset and specify one."
+	exit 1
+    fi
+
+    eval LEGACY_CHARSET\=\$CHARSET_$I18N
+
+    echo >&2 "$0: Guessing legacy charset: $LEGACY_CHARSET"
+
+fi
+
+if test ${#ARGV[@]} = 0 ; then
+    ARGV=.
+fi
+
+TMP=`mktemp -d /tmp/utf8ize.$$_XXXXXX`
+if test $? -ne 0 ; then
+    echo >&2 "$0: Can't create temp file, exiting..."
+    exit 1
+fi
+
+REAL_ACTION=false
+if $OPTARG_REAL ; then
+    REAL_ACTION=true
+fi
+if $OPTARG_DRY_RUN ; then
+    REAL_ACTION=false
+fi
+
+function utf8ize_item {
+    if test -d "$1" ; then
+	local olddir
+	olddir="$PWD"
+	cd "$1"
+	echo >&2 "Inspecting directory $PWD..."
+	local item
+	for item in * ; do
+	    utf8ize_item "$item"
+	done
+	cd "$olddir"
+    fi
+    local NEW_NAME
+    # Is it valid UTF-8?
+    NEW_NAME="$(echo "$1" | iconv 2>/dev/null -f UTF-8 -t UTF-8)"
+    if test $? -eq 0 ; then
+	# Is it pure ASCII?
+	NEW_NAME="$(echo "$1" | iconv 2>/dev/null -f UTF-8 -t ASCII)"
+	if test $? -gt 0 ; then
+	    echo >&2 "File $1 seems to be already in UTF-8."
+	fi
+	NEW_NAME=$1
+    else
+	# Probably in legacy charset. Try to find new name.
+	NEW_NAME="$(echo "$1" | iconv -f $LEGACY_CHARSET -t UTF-8)"
+	if test $? -gt 0 ; then
+	    echo >&2 "Cannot get valid UTF-8 name for \"$1\"."
+	    NEW_NAME=$1
+	fi
+    fi
+
+    if test "$1" != "$NEW_NAME" ; then
+	if $REAL_ACTION ; then
+	    touch -r . $TMP/stamp
+	    mv -i -v "$1" "$NEW_NAME"
+	    touch -r $TMP/stamp .
+	else
+	    echo >&2 "Should rename \"$1\" -> \"$NEW_NAME\"."
+	fi
+    fi
+}
+
+for DIRECTORY in "${ARGV[@]}" ; do
+    utf8ize_item "$DIRECTORY"
+done
+
+rm -f $TMP/stamp
+rmdir $TMP
+
+if ! $REAL_ACTION ; then
+    echo >&2
+    echo >&2 "That's all. If you want to perform operation for real, use --real."
+fi
