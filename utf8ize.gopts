@@ -4,13 +4,13 @@
 
 @program utf8ize
 
-@version 0.1
+@version 0.2
 
 @year 2004
 
 @author Stanislav Brabec
 
-@bugsto Stanislav Brabec <sbrabec@suse.cz>
+@bugsto Stanislav Brabec <utx@penguin.cz>
 
 @free_copy
 
@@ -25,6 +25,12 @@ use specific charset
 
 @switch REAL -r --real
 real mode, perform rename
+
+@switch LINKS -l --links
+allow conversion of links
+WARNINGS:
+- link mtime cannot be saved
+- link target rename is not verified
 
 @switch DRY_RUN --dry-run
 do nothing, only check directories (default)
@@ -259,7 +265,7 @@ else
 
     eval LEGACY_CHARSET\=\$CHARSET_$I18N
 
-    echo >&2 "$0: Guessing legacy charset: $LEGACY_CHARSET"
+    echo >&2 "$0: Guessing legacy charset: $LEGACY_CHARSET."
 
 fi
 
@@ -282,7 +288,7 @@ if $OPTARG_DRY_RUN ; then
 fi
 
 function utf8ize_item {
-    if test -d "$1" ; then
+    if [ ! -L "$1" -a -d "$1" ] ; then
 	local olddir
 	olddir="$PWD"
 	cd "$1"
@@ -300,7 +306,7 @@ function utf8ize_item {
 	# Is it pure ASCII?
 	NEW_NAME="$(echo "$1" | iconv 2>/dev/null -f UTF-8 -t ASCII)"
 	if test $? -gt 0 ; then
-	    echo >&2 "File $1 seems to be already in UTF-8."
+	    echo >&2 "File \"$1\" seems to be already in UTF-8."
 	fi
 	NEW_NAME=$1
     else
@@ -321,6 +327,45 @@ function utf8ize_item {
 	    echo >&2 "Should rename \"$1\" -> \"$NEW_NAME\"."
 	fi
     fi
+
+    # Allow relinking?
+    if test -L "$1" ; then
+	local OLD_LINK="$(readlink "$1")"
+ 	local NEW_LINK
+    # Is it valid UTF-8?
+	NEW_LINK="$(echo "$OLD_LINK" | iconv 2>/dev/null -f UTF-8 -t UTF-8)"
+	if test $? -eq 0 ; then
+	    # Is it pure ASCII?
+	    NEW_LINK="$(echo "$OLD_LINK" | iconv 2>/dev/null -f UTF-8 -t ASCII)"
+	    if test $? -gt 0 ; then
+		echo >&2 "Link \"$NEW_NAME\" target \"$OLD_LINK\" seems to be already in UTF-8."
+	    fi
+	    NEW_LINK=$OLD_LINK
+	else
+	    # Probably in legacy charset. Try to find new name.
+	    NEW_LINK="$(echo "$OLD_LINK" | iconv -f $LEGACY_CHARSET -t UTF-8)"
+	    if test $? -gt 0 ; then
+		echo >&2 "Cannot get valid UTF-8 link \"$NEW_NAME\" target for \"$OLD_LINK\"."
+		NEW_LINK=$OLD_LINK
+	    fi
+	fi
+
+	if test "$OLD_LINK" != "$NEW_LINK" ; then
+	    if $OPTARG_LINKS ; then
+		if $REAL_ACTION ; then
+		    touch -r . $TMP/stamp
+		    rm "$NEW_NAME"
+		    ln -v -s "$NEW_LINK" "$NEW_NAME"
+		    touch -r $TMP/stamp .
+		else
+		    echo >&2 "Should change link \"$NEW_NAME\" target \"$OLD_LINK\" -> \"$NEW_LINK\"."
+		fi
+	    else
+		echo >&2 "Warning: Use --links to rename \"$NEW_NAME\" target \"$OLD_LINK\" -> \"$NEW_LINK\"."
+	    fi
+	fi
+    fi
+
 }
 
 for DIRECTORY in "${ARGV[@]}" ; do
