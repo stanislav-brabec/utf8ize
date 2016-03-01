@@ -1,0 +1,13 @@
+utf8ize
+=======
+
+Small script for renaming files on file system from locale dependent
+encoding to UTF-8 file names. Verbose and self-descriptive.  With symlink support.
+
+You need genopts to generate the script:
+https://github.com/stanislav-brabec/genopts
+
+http://www.penguin.cz/~utx/
+https://github.com/stanislav-brabec/utf8ize
+http://www.penguin.cz/~utx/ftp/misc/
+ftp://ftp.penguin.cz/pub/users/utx/misc/

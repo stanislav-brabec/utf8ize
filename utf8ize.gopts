@@ -4,9 +4,9 @@
 
 @program utf8ize
 
-@version 0.2
+@version 0.3
 
-@year 2004
+@year 2004-2016
 
 @author Stanislav Brabec
 
@@ -329,9 +329,9 @@ function utf8ize_item {
     fi
 
     # Allow relinking?
-    if test -L "$1" ; then
-	local OLD_LINK="$(readlink "$1")"
- 	local NEW_LINK
+    if test -L "$NEW_NAME" ; then
+	local OLD_LINK="$(readlink "$NEW_NAME")"
+	local NEW_LINK
     # Is it valid UTF-8?
 	NEW_LINK="$(echo "$OLD_LINK" | iconv 2>/dev/null -f UTF-8 -t UTF-8)"
 	if test $? -eq 0 ; then
